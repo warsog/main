@@ -1,15 +1,711 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Concept Preview</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media MVP - User Experience Walkthrough</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .step {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+        }
+
+        .step-content {
+            margin-top: 20px;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .step-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .mockup {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .mockup-title {
+            font-weight: 600;
+            color: #495057;
+            margin-left: 10px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .generated-content {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .generated-content::before {
+            content: "✨ AI Generated";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .success-message::before {
+            content: "✅";
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .tweet-preview {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #1da1f2, #0d8bd9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tweet-user {
+            font-weight: 600;
+            color: #14171a;
+        }
+
+        .tweet-handle {
+            color: #657786;
+            margin-left: 5px;
+        }
+
+        .tweet-content {
+            color: #14171a;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .tweet-actions {
+            display: flex;
+            justify-content: space-between;
+            max-width: 200px;
+            color: #657786;
+            font-size: 14px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .flow-arrow {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .step {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Welcome to My Concept!</h1>
-  <p>This is a demo of my idea.</p>
-  <img src="assets/preview.png" alt="Concept preview" />
-  <script src="script.js"></script>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Social Media MVP</h1>
+            <p>User Experience Walkthrough - From Idea to Published Post</p>
+        </div>
+
+        <div class="steps-container">
+            <!-- Step 1: Landing Page -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h2 class="step-title">User Opens Your Retool App</h2>
+                    <p class="step-description">The user navigates to your Retool application URL. They see a clean, simple interface focused on the core functionality.</p>
+                    
+                    <div class="mockup">
+                        <div class="mockup-header">
+                            <div style="width: 12px; height: 12px; background: #ff5f57; border-radius: 50%; margin-right: 5px;"></div>
+                            <div style="width: 12px; height: 12px; background: #ffbd2e; border-radius: 50%; margin-right: 5px;"></div>
+                            <div style="width: 12px; height: 12px; background: #28ca42; border-radius: 50%; margin-right: 10px;"></div>
+                            <div class="mockup-title">AI Social Media Generator</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px;">
+                            <h3 style="color: #333; margin-bottom: 10px;">🤖 AI-Powered Social Media Posts</h3>
+                            <p style="color: #666; margin-bottom: 20px;">Enter a topic and let AI create engaging social media content for you</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Input Topic -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h2 class="step-title">User Enters Their Topic</h2>
+                    <p class="step-description">The user types in a topic, keyword, or prompt that they want to create social media content about.</p>
+                    
+                    <div class="mockup">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Enter your topic or idea:</label>
+                        <input type="text" class="input-field" placeholder="e.g., 'sustainable living tips for beginners'" value="sustainable living tips for beginners">
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="button">Generate Post</button>
+                            <button class="button" style="background: #6c757d;">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 3: AI Processing -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h2 class="step-title">AI Generates Content</h2>
+                    <p class="step-description">The system calls OpenAI's API to generate engaging social media content based on the user's input. This happens in the background.</p>
+                    
+                    <div class="mockup">
+                        <div style="text-align: center; padding: 20px;">
+                            <div class="loading-spinner"></div>
+                            <span style="color: #666;">Generating your social media post...</span>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                            <small style="color: #666;">💡 <strong>Behind the scenes:</strong> Your topic is sent to OpenAI's GPT model, which creates tailored content optimized for social media engagement.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 4: Review Generated Content -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h2 class="step-title">User Reviews Generated Content</h2>
+                    <p class="step-description">The AI-generated content appears in a preview area. The user can review, edit if needed, and see the character count.</p>
+                    
+                    <div class="mockup">
+                        <div class="generated-content">
+                            <div style="margin-top: 15px;">
+                                🌱 Ready to start your sustainable living journey? Here are 3 simple tips that make a huge difference:
+
+                                ✅ Switch to reusable water bottles & coffee cups
+                                ✅ Start composting your food scraps
+                                ✅ Choose local, seasonal produce when possible
+
+                                Small changes, big impact! 💚 #SustainableLiving #EcoFriendly #GreenLiving
+                            </div>
+                            <div class="character-count">247/280 characters</div>
+                        </div>
+                        
+                        <div style="margin-top: 15px;">
+                            <button class="button">✏️ Edit Content</button>
+                            <button class="button">🔄 Regenerate</button>
+                            <button class="button" style="background: #28a745;">📤 Post to Twitter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 5: Post to Social Media -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h2 class="step-title">Content Gets Posted</h2>
+                    <p class="step-description">When the user clicks "Post to Twitter", the content is automatically published to their connected Twitter account via the API.</p>
+                    
+                    <div class="mockup">
+                        <div style="text-align: center; padding: 15px;">
+                            <div class="loading-spinner"></div>
+                            <span style="color: #666;">Posting to Twitter...</span>
+                        </div>
+                        
+                        <div class="success-message" style="margin-top: 15px;">
+                            Successfully posted to Twitter! 
+                            <a href="#" style="color: #155724; text-decoration: none; font-weight: 600; margin-left: 10px;">View Tweet →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 6: Live Tweet Preview -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h2 class="step-title">Content Appears Live on Twitter</h2>
+                    <p class="step-description">The generated content is now live on Twitter (or your test account) and can be seen by followers.</p>
+                    
+                    <div class="mockup">
+                        <div class="tweet-preview">
+                            <div class="tweet-header">
+                                <div class="avatar">YB</div>
+                                <div>
+                                    <span class="tweet-user">Your Brand</span>
+                                    <span class="tweet-handle">@yourbrand_test</span>
+                                    <span style="color: #657786; margin-left: 5px;">· 2m</span>
+                                </div>
+                            </div>
+                            <div class="tweet-content">
+                                🌱 Ready to start your sustainable living journey? Here are 3 simple tips that make a huge difference:
+
+                                ✅ Switch to reusable water bottles & coffee cups<br>
+                                ✅ Start composting your food scraps<br>
+                                ✅ Choose local, seasonal produce when possible
+
+                                Small changes, big impact! 💚 #SustainableLiving #EcoFriendly #GreenLiving
+                            </div>
+                            <div class="tweet-actions">
+                                <span>💬 Reply</span>
+                                <span>🔄 Retweet</span>
+                                <span>❤️ Like</span>
+                                <span>📤 Share</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <!-- Enhanced Features Section -->
+        <div style="margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 20px; backdrop-filter: blur(10px);">
+            <h2 style="color: white; text-align: center; margin-bottom: 30px; font-size: 2em;">🚀 Enhanced Features</h2>
+            
+            <!-- Feature 1: Viral Post Search & Reply -->
+            <div class="step" style="margin-bottom: 30px;">
+                <div class="step-number">+</div>
+                <div class="step-content">
+                    <h2 class="step-title">🔥 Find Viral Posts & Generate Smart Replies</h2>
+                    <p class="step-description">Search for trending/viral posts in your niche and let AI generate contextual replies to boost engagement.</p>
+                    
+                    <div class="mockup">
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <input type="text" class="input-field" placeholder="Search keywords (e.g., 'sustainable living', 'startup tips')" value="sustainable living" style="flex: 1;">
+                            <button class="button">🔍 Find Viral Posts</button>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin: 10px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span style="font-weight: 600; color: #333;">🔥 Viral Posts Found</span>
+                                <span style="background: #ff6b6b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">25.3K likes</span>
+                            </div>
+                            
+                            <div class="tweet-preview" style="margin-bottom: 15px;">
+                                <div class="tweet-header">
+                                    <div class="avatar">EG</div>
+                                    <div>
+                                        <span class="tweet-user">Eco Guru</span>
+                                        <span class="tweet-handle">@ecoguru</span>
+                                        <span style="color: #657786; margin-left: 5px;">· 4h</span>
+                                    </div>
+                                </div>
+                                <div class="tweet-content">
+                                    Just replaced all my plastic containers with glass ones! 🌱 The difference in food freshness is incredible. Why did I wait so long? #ZeroWaste #SustainableLiving
+                                </div>
+                                <div class="tweet-actions">
+                                    <span>💬 1.2K</span>
+                                    <span>🔄 3.8K</span>
+                                    <span>❤️ 25.3K</span>
+                                    <span>📤 892</span>
+                                </div>
+                            </div>
+                            
+                            <button class="button" style="background: #28a745;">💬 Generate Reply Options</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2: AI Reply Generation -->
+            <div class="step" style="margin-bottom: 30px;">
+                <div class="step-number">+</div>
+                <div class="step-content">
+                    <h2 class="step-title">🤖 Choose from 3 AI-Generated Reply Options</h2>
+                    <p class="step-description">AI analyzes the viral post and generates 3 different reply styles: Supportive, Question-based, and Value-adding.</p>
+                    
+                    <div class="mockup">
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-weight: 600; color: #333; margin-bottom: 10px;">Choose your reply style:</div>
+                            
+                            <!-- Option 1: Supportive -->
+                            <div style="border: 2px solid #e9ecef; border-radius: 8px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;" onclick="selectReply(this, 1)">
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">SUPPORTIVE</span>
+                                    <input type="radio" name="reply_option" value="1" style="margin-left: auto;">
+                                </div>
+                                <div style="color: #495057;">
+                                    Love this! 🙌 Glass containers are such a game-changer. I made the switch last year and my food stays fresh for days longer. Thanks for inspiring others to make the change! 🌱
+                                </div>
+                                <div class="character-count">156/280 characters</div>
+                            </div>
+                            
+                            <!-- Option 2: Question-based -->
+                            <div style="border: 2px solid #e9ecef; border-radius: 8px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;" onclick="selectReply(this, 2)">
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                    <span style="background: #ffc107; color: #212529; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">QUESTION</span>
+                                    <input type="radio" name="reply_option" value="2" style="margin-left: auto;">
+                                </div>
+                                <div style="color: #495057;">
+                                    That's awesome! 🌟 Quick question - do you have any tips for transitioning gradually? I'm thinking of starting with just food storage containers first. What would you recommend? 
+                                </div>
+                                <div class="character-count">172/280 characters</div>
+                            </div>
+                            
+                            <!-- Option 3: Value-adding -->
+                            <div style="border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s;" onclick="selectReply(this, 3)">
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">VALUE-ADD</span>
+                                    <input type="radio" name="reply_option" value="3" checked style="margin-left: auto;">
+                                </div>
+                                <div style="color: #495057;">
+                                    Great choice! 💡 Pro tip: Look for borosilicate glass containers - they're thermal shock resistant and perfect for going from fridge to microwave. Pyrex and Anchor Hocking make excellent ones. Your wallet and planet will thank you! 🌍
+                                </div>
+                                <div class="character-count">241/280 characters</div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px;">
+                                <button class="button">✏️ Edit Selected</button>
+                                <button class="button">🔄 Regenerate Options</button>
+                                <button class="button" style="background: #28a745;">💬 Post Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Reply to Your Comments -->
+            <div class="step" style="margin-bottom: 30px;">
+                <div class="step-number">+</div>
+                <div class="step-content">
+                    <h2 class="step-title">🔔 Auto-Reply to Comments on Your Posts</h2>
+                    <p class="step-description">Monitor replies to your posts and generate thoughtful responses to keep conversations going.</p>
+                    
+                    <div class="mockup">
+                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <span style="font-size: 1.2em; margin-right: 10px;">🔔</span>
+                                <span style="font-weight: 600; color: #856404;">New comment on your post about sustainable living tips</span>
+                            </div>
+                            
+                            <div class="tweet-preview" style="margin-bottom: 15px;">
+                                <div class="tweet-header">
+                                    <div class="avatar">JS</div>
+                                    <div>
+                                        <span class="tweet-user">Jane Smith</span>
+                                        <span class="tweet-handle">@janesmith</span>
+                                        <span style="color: #657786; margin-left: 5px;">· 15m</span>
+                                    </div>
+                                </div>
+                                <div class="tweet-content">
+                                    This is great! But I'm curious - how do you handle composting if you live in an apartment? I don't have a backyard for a compost bin.
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px;">
+                                <button class="button" style="background: #fd7e14;">🤖 Generate Reply Options</button>
+                                <button class="button" style="background: #6c757d;">⏰ Snooze</button>
+                                <button class="button" style="background: #dc3545;">✖️ Ignore</button>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 15px;">
+                            <div style="font-weight: 600; color: #0c5460; margin-bottom: 10px;">💡 AI-Generated Reply Suggestions:</div>
+                            
+                            <div style="background: white; border-radius: 6px; padding: 12px; margin-bottom: 8px;">
+                                <div style="color: #495057; margin-bottom: 5px;">Great question! 🏠 For apartments, try: 1) Countertop composters (Lomi, FoodCycler) 2) Worm bins (small & odorless) 3) Freezer method - collect scraps, then bring to community gardens. I have a whole guide on apartment composting if you're interested!</div>
+                                <div class="character-count">267/280 characters</div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px;">
+                                <button class="button">✏️ Edit</button>
+                                <button class="button">🔄 Regenerate</button>
+                                <button class="button" style="background: #28a745;">💬 Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-highlights">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Lightning Fast</div>
+                <div class="feature-description">From idea to published post in under 30 seconds</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Optimized Content</div>
+                <div class="feature-description">AI creates content tailored for social media engagement</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔥</div>
+                <div class="feature-title">Viral Post Discovery</div>
+                <div class="feature-description">Find trending posts and generate smart replies automatically</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <div class="feature-title">Smart Conversations</div>
+                <div class="feature-description">Auto-reply to comments with contextual, helpful responses</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <div class="feature-title">Cost Effective</div>
+                <div class="feature-description">Runs on free tiers - minimal ongoing costs</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <div class="feature-title">Easy to Build</div>
+                <div class="feature-description">No-code solution using Retool's drag-and-drop interface</div>
+            </div>
+        </div>
+
+        <script>
+            function selectReply(element, option) {
+                // Remove selection from all options
+                document.querySelectorAll('[onclick^="selectReply"]').forEach(el => {
+                    el.style.borderColor = '#e9ecef';
+                    el.style.backgroundColor = 'white';
+                });
+                
+                // Highlight selected option
+                element.style.borderColor = '#28a745';
+                element.style.backgroundColor = '#f8fff9';
+                
+                // Check the radio button
+                element.querySelector('input[type="radio"]').checked = true;
+            }
+        </script>
+    </div>
 </body>
 </html>
